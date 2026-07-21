@@ -1,0 +1,102 @@
+hsy@b200-2-20260721-092644 ~ ❯ sudo cat /etc/netplan/50-cloud-init.yaml
+# ══════════════════════════════════════════════════════════════════
+# b200-2 Rail-Only Netplan Configuration (8-Rail Split)
+# ══════════════════════════════════════════════════════════════════
+# 토폴로지: 8-Rail (각 NIC가 독립적인 VRF/Rail에 매핑)
+# 패턴: NIC#N (ens11X) ↔ Rail_N (10.N.0.0/16)
+# 연결 정보: Switch Port Et21-Et28 ↔ b200-2 NIC#1-8
+# ══════════════════════════════════════════════════════════════════
+
+network:
+  version: 2
+  renderer: networkd
+
+  ethernets:
+    # ══════════════════════════════════════════════════════════
+    # Management Interface
+    # ══════════════════════════════════════════════════════════
+    ens110f0np0:
+      addresses: [172.17.0.6/16]
+      nameservers:
+        addresses: [1.1.1.1]
+      routes:
+        - to: 0.0.0.0/0
+          via: 172.17.0.1
+          metric: 100
+      mtu: 1500
+
+    # ══════════════════════════════════════════════════════════
+    # GPU Interfaces (Rail_1 ~ Rail_8)
+    # ══════════════════════════════════════════════════════════
+
+    # NIC#1 → Et21 (Rail_1)
+    ens112np0:
+      addresses: [10.1.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.1.0.0/16
+          via: 10.1.2.0
+
+    # NIC#2 → Et22 (Rail_2)
+    ens113np0:
+      addresses: [10.2.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.2.0.0/16
+          via: 10.2.2.0
+
+    # NIC#3 → Et23 (Rail_3)
+    ens114np0:
+      addresses: [10.3.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.3.0.0/16
+          via: 10.3.2.0
+
+    # NIC#4 → Et24 (Rail_4)
+    ens115np0:
+      addresses: [10.4.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.4.0.0/16
+          via: 10.4.2.0
+
+    # NIC#5 → Et25 (Rail_5)
+    ens116np0:
+      addresses: [10.5.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.5.0.0/16
+          via: 10.5.2.0
+
+    # NIC#6 → Et26 (Rail_6)
+    ens117np0:
+      addresses: [10.6.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.6.0.0/16
+          via: 10.6.2.0
+
+    # NIC#7 → Et27 (Rail_7)
+    ens118np0:
+      addresses: [10.7.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.7.0.0/16
+          via: 10.7.2.0
+
+    # NIC#8 → Et28 (Rail_8)
+    ens119np0:
+      addresses: [10.8.2.1/31]
+      mtu: 9000
+      link-local: []
+      routes:
+        - to: 10.8.0.0/16
+          via: 10.8.2.0
